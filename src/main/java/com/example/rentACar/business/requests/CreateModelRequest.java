@@ -12,9 +12,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateBrandRequest {
+public class CreateModelRequest {
     @NotNull
     @NotBlank
     @Size(min = 3,max = 20)
     private String name;
+    @NotNull
+    @NotBlank
+    private int brandId;
 }

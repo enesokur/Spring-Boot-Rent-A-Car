@@ -5,6 +5,7 @@ import com.example.rentACar.business.requests.CreateBrandRequest;
 import com.example.rentACar.business.requests.UpdateBrandRequest;
 import com.example.rentACar.business.responses.GetAllBrandsResponse;
 import com.example.rentACar.business.responses.GetByIdBrandResponse;
+import com.example.rentACar.business.rules.BrandBusinessRules;
 import com.example.rentACar.core.utilities.mappers.ModelMapperManager;
 import com.example.rentACar.core.utilities.mappers.ModelMapperService;
 import com.example.rentACar.dataAccess.abstracts.BrandRepository;
@@ -20,11 +21,13 @@ import java.util.stream.Collectors;
 public class BrandManager implements BrandService {
     private BrandRepository brandRepository;
     private ModelMapperService modelMapperService;
+    private BrandBusinessRules brandBusinessRules;
 
     @Autowired
-    public BrandManager(BrandRepository brandRepository,ModelMapperService modelMapperService){
+    public BrandManager(BrandRepository brandRepository,ModelMapperService modelMapperService,BrandBusinessRules brandBusinessRules){
         this.brandRepository = brandRepository;
         this.modelMapperService = modelMapperService;
+        this.brandBusinessRules = brandBusinessRules;
     }
     @Override
     public List<GetAllBrandsResponse> getAll() {
@@ -48,6 +51,7 @@ public class BrandManager implements BrandService {
     public void add(CreateBrandRequest createBrandRequest) {
         //Brand brand = new Brand();
         //brand.setName(createBrandRequest.getName());
+        this.brandBusinessRules.checkIfExists(createBrandRequest.getName());
         Brand brand = this.modelMapperService.forRequest().map(createBrandRequest,Brand.class);
         this.brandRepository.save(brand);
     }
